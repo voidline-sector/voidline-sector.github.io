@@ -13,7 +13,6 @@
   --cyan:    #4ee8d4;
   --cyan-d:  #1a7a6e;
   --cyan-b:  #8fffef;
-  --amber:   #e07b20;
   --text:    #4ee8d4;
   --dim:     #2a7a70;
   --mono:    'Share Tech Mono', monospace;
@@ -45,7 +44,9 @@ html, body { width:100%; height:100%; background:#000; overflow:hidden; cursor:c
 @keyframes blink  { 0%,100%{opacity:1} 50%{opacity:0.2} }
 @keyframes pulse  { 0%,100%{opacity:0.9} 50%{opacity:0.4} }
 
-/* ── Corner brackets — 2x size ── */
+
+
+/* ── Corner brackets ── */
 .corner {
   position:absolute; width:44px; height:44px;
   opacity:0; animation:fadeIn 0.5s ease forwards 0.3s;
@@ -67,34 +68,28 @@ html, body { width:100%; height:100%; background:#000; overflow:hidden; cursor:c
 }
 #top .r { display:flex; gap:22px; align-items:center; }
 .live {
-  color:var(--cyan);
-  font-size:15px;
-  letter-spacing:0.2em;
+  color:var(--cyan); font-size:15px; letter-spacing:0.2em;
   animation:blink 2.4s ease-in-out infinite;
   text-shadow: 0 0 12px rgba(78,232,212,0.6);
 }
 #clock { letter-spacing:0.15em; color:var(--dim); }
 
-/* ── Title block — above the data bar, grounded at bottom ── */
+/* ── Title block ── */
 #title {
   position:absolute;
-  bottom:130px;              /* sits just above the bottom bar */
+  bottom:130px;
   left:0; right:0;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  text-align:center;
+  display:flex; flex-direction:column; align-items:center; text-align:center;
   opacity:0; animation:fadeUp 1.1s ease forwards 1.2s;
 }
 #title .t-eyebrow {
   font-family:var(--mono);
-  font-size:13px;
-  letter-spacing:0.55em;
-  color:var(--cyan-d);
-  margin-bottom:6px;
-  opacity:0.85;
+  font-size:13px; letter-spacing:0.55em;
+  color:var(--cyan-d); margin-bottom:6px; opacity:0.85;
   text-shadow: 0 0 8px rgba(78,232,212,0.3);
 }
+
+/* Dilapidated title — SVG turbulence filter erodes the letterforms */
 #title .t-name {
   font-family:var(--display);
   font-size:clamp(52px, 8vw, 110px);
@@ -102,28 +97,24 @@ html, body { width:100%; height:100%; background:#000; overflow:hidden; cursor:c
   color:var(--cyan);
   letter-spacing:0.06em;
   text-shadow:
-    0 0 30px rgba(78,232,212,0.5),
-    0 0 80px rgba(78,232,212,0.15);
+    0 0 12px rgba(78,232,212,0.9),
+    0 0 35px rgba(78,232,212,0.55),
+    0 0 80px rgba(78,232,212,0.25),
+    0 0 140px rgba(78,232,212,0.1);
 }
+
 #title .t-divider {
   width:120px; height:1px;
   background:linear-gradient(to right, transparent, var(--cyan-d), transparent);
-  margin:14px auto;
-  opacity:0.55;
+  margin:16px auto; opacity:0.55;
 }
 #title .t-desc {
-  font-family:var(--italic);
-  font-style:italic;
-  font-weight:300;
-  font-size:15px;
-  line-height:1.7;
-  color:var(--dim);
-  max-width:360px;
-  opacity:0.9;
+  font-family:var(--italic); font-style:italic; font-weight:300;
+  font-size:15px; line-height:1.7;
+  color:var(--dim); max-width:360px; opacity:0.9;
 }
 #title .t-desc em {
-  color:var(--cyan);
-  font-style:italic;
+  color:var(--cyan); font-style:italic;
   text-shadow: 0 0 8px rgba(78,232,212,0.4);
 }
 
@@ -147,11 +138,6 @@ html, body { width:100%; height:100%; background:#000; overflow:hidden; cursor:c
   color:var(--cyan);
   text-shadow: 0 0 10px rgba(78,232,212,0.35);
 }
-.dv.red {
-  color:var(--cyan-d);
-  letter-spacing:0.04em;
-  text-shadow:none;
-}
 .dv.glitch { animation:gfl 7s steps(1) infinite; }
 @keyframes gfl {
   0%,93%  { opacity:1; clip-path:none; color:var(--cyan); }
@@ -167,14 +153,80 @@ html, body { width:100%; height:100%; background:#000; overflow:hidden; cursor:c
   animation:pulse 3s ease-in-out infinite;
 }
 
-@media(max-width:640px){
-  #bottom{ flex-wrap:wrap; gap:14px; }
-  .dc.r { display:none; }
-  #title .t-name { font-size:13vw; }
+/* Classification bars */
+.class-bars {
+  display:flex;
+  align-items:flex-end;
+  gap:3px;
+  width:100%;
+  height:16px;      /* fixed — bars never push the layout */
+  margin-top:4px;
+}
+.class-bars span {
+  flex:1;
+  height:100%;      /* JS overrides height on dip bars */
+  background:var(--cyan-d);
+  border-radius:1px;
+  opacity:0.7;
+  transition: height 0.4s ease-in;   /* snap down quickly, no auto-restore smooth */
+}
+
+@media(max-width:705px){
+  /* Top bar — hide label, keep clock + LIVE right-aligned */
+  #top { justify-content:flex-end; padding:16px 20px 12px; }
+  #top > span:first-child { display:none; }
+  #top .r { gap:14px; }
+  .live { font-size:13px; }
+  #clock { font-size:12px; }
+
+  /* Corner brackets — pushed inward enough to clear text in all corners */
+  .corner { width:28px; height:28px; }
+  .corner.tl { top:8px;    left:8px;   }
+  .corner.tr { top:8px;    right:8px;  } /* LIVE sits inside the bar, no overlap */
+  .corner.bl { bottom:8px; left:8px;   }
+  .corner.br { bottom:8px; right:8px;  }
+
+  /* Title — anchored above bottom bar, same as desktop logic */
+  #title {
+    bottom: 130px;
+    top: auto;
+    transform: none;
+    padding: 0 16px;
+  }
+  #title .t-name {
+    font-size: clamp(38px, 13vw, 72px);
+    max-width: 3.5em;
+    word-break: break-word;
+    line-height: 0.95;
+  }
+  #title .t-eyebrow { font-size:10px; letter-spacing:0.35em; }
+  #title .t-desc { font-size:13px; max-width:90vw; }
+  #title .t-divider { width:80px; margin:10px auto; }
+
+  /* Bottom bar — 2x2 grid */
+  #bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 14px 10px;
+    padding: 14px 20px 18px;
+    align-items: start;
+  }
+  #bottom .dc:nth-child(1) { align-items:flex-start !important; }
+  #bottom .dc:nth-child(2) { align-items:flex-end   !important; }
+  #bottom .dc:nth-child(3) { align-items:flex-start !important; }
+  #bottom .dc:nth-child(4) { align-items:flex-end   !important; }
+  #bottom .dc.c { align-items:inherit; }
+  #bottom .dc.r { align-items:flex-end; }
+
+  .dl { font-size:9px; letter-spacing:0.2em; }
+  .dv { font-size:14px; }
+  .status { font-size:9px; padding:2px 7px; }
 }
 </style>
 </head>
 <body>
+
 <div id="scene">
   <img id="bg" src="Voidline_Sector_R-77-viewport01.png" alt="Voidline Sector R-77"/>
   <canvas id="fx"></canvas>
@@ -217,7 +269,10 @@ html, body { width:100%; height:100%; background:#000; overflow:hidden; cursor:c
       </div>
       <div class="dc r">
         <div class="dl">Classification</div>
-        <div class="dv red">▓▓▓▓▓▓▓▓</div>
+        <div class="class-bars">
+          <span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span>
+        </div>
       </div>
     </div>
   </div>
@@ -296,9 +351,7 @@ function drawRain(){
     ctx.beginPath();
     ctx.moveTo(d.x,d.y);
     ctx.lineTo(d.x+dx,d.y+dy);
-    ctx.strokeStyle=g;
-    ctx.lineWidth=d.w;
-    ctx.stroke();
+    ctx.strokeStyle=g; ctx.lineWidth=d.w; ctx.stroke();
     d.x+=Math.sin(d.ang)*d.spd*0.3;
     d.y+=Math.cos(d.ang)*d.spd;
     if(d.y-d.len>r.y+r.h||d.x>r.x+r.w+50||d.x<r.x-50)
@@ -307,9 +360,9 @@ function drawRain(){
 }
 
 /* Glitch engine */
-let gTimer=0, gType='none', gElapsed=0, gDur=0;
+let gTimer=0, gType='none', gElapsed=0, gDur=0, gTotalDur=0;
 let rgbStartOff=0, rgbCurOff=0;
-let slices=[];
+let slices=[], scanBlocks=[];
 
 function buildSlices(){
   const r=imgRect(); slices=[];
@@ -322,21 +375,43 @@ function buildSlices(){
     });
 }
 
-function startRGB(startOff,dur){
-  gType=      'rgb';
-  rgbStartOff= startOff;
-  rgbCurOff=   startOff;
-  gDur=        dur;
-  gElapsed=    0;
+/* Both boot and recurring RGB use identical easing:
+   t = elapsed / totalDur  →  ease-in t² curve */
+function startRGB(startOff, dur){
+  gType=       'rgb';
+  rgbStartOff=  startOff;
+  rgbCurOff=    startOff;
+  gDur=         dur;
+  gTotalDur=    dur;   // fixed denominator — same as boot
+  gElapsed=     0;
+}
+
+function buildScanBlocks(){
+  // 1–3 small dark rectangles, short-lived, random positions within image
+  const r=imgRect(); scanBlocks=[];
+  const n=randInt(1,4);
+  for(let i=0;i<n;i++){
+    const bh=rand(r.h*0.04, r.h*0.11);  // 4–11% of image height
+    const bw=rand(r.w*0.2,  r.w*0.55);  // 20–55% of image width
+    scanBlocks.push({
+      x: r.x + rand(0, r.w-bw),
+      y: r.y + rand(0, r.h-bh),
+      w: bw, h: bh,
+    });
+  }
 }
 
 function triggerGlitch(){
-  if(Math.random()<0.42){
-    startRGB(rand(12,22), rand(1.8,3.2));
+  const roll = Math.random();
+  if(roll < 0.38){
+    // Horizontal slice dropout
+    gType='slice'; gDur=rand(1.5,2.8); gTotalDur=gDur; gElapsed=0; buildSlices();
+  } else if(roll < 0.75){
+    // Scanline flicker blocks — rare, short (1s)
+    gType='scan'; gDur=1.0; gTotalDur=1.0; gElapsed=0; buildScanBlocks();
   } else {
-    gType='slice'; gDur=rand(1.5,2.8); gElapsed=0; buildSlices();
-    if(Math.random()<0.3)
-      setTimeout(()=>startRGB(rand(6,14),rand(0.5,1.0)), gDur*1000+30);
+    // RGB convergence
+    startRGB(rand(12,22), rand(2.0,3.2));
   }
 }
 
@@ -357,17 +432,32 @@ function drawGlitch(){
     for(const s of slices){
       ctx.save();
       ctx.beginPath(); ctx.rect(r.x,s.y,r.w,s.h); ctx.clip();
-      ctx.drawImage(img, r.x+s.dx, r.y, r.w, r.h);
+      ctx.drawImage(img,r.x+s.dx,r.y,r.w,r.h);
       ctx.restore();
+    }
+    ctx.restore();
+  } else if(gType==='scan'){
+    // Flicker: alternate dark/slightly-visible each frame for a jittery feel
+    const flicker = Math.random() < 0.5;
+    ctx.save();
+    ctx.globalAlpha = flicker ? 0.82 : 0.55;
+    for(const b of scanBlocks){
+      ctx.fillStyle='rgba(0,0,0,1)';
+      ctx.fillRect(b.x, b.y, b.w, b.h);
+      // cyan scanline stripes across the block
+      ctx.fillStyle='rgba(78,232,212,0.28)';
+      for(let sy=b.y; sy<b.y+b.h; sy+=3){
+        ctx.fillRect(b.x, sy, b.w, 1);
+      }
     }
     ctx.restore();
   }
 }
 
-/* Boot */
+/* Boot sequence */
 let booting=true;
 const BOOT_DUR=2.6, BOOT_OFF=24;
-gType='rgb'; rgbCurOff=BOOT_OFF; gElapsed=0;
+gType='rgb'; rgbCurOff=BOOT_OFF; gElapsed=0; gTotalDur=BOOT_DUR;
 
 let last=0;
 function loop(ts){
@@ -390,7 +480,8 @@ function loop(ts){
     } else {
       gElapsed+=dt; gDur-=dt;
       if(gType==='rgb'){
-        const t=Math.min(gElapsed/(gElapsed+Math.max(gDur,0)),1);
+        // identical formula to boot: t = elapsed / totalDur
+        const t=Math.min(gElapsed/gTotalDur,1);
         rgbCurOff=rgbStartOff*(1-t*t);
       }
       drawGlitch();
@@ -404,6 +495,40 @@ function loop(ts){
 function start(){ requestAnimationFrame(loop); }
 if(img.complete&&img.naturalWidth) start();
 else img.addEventListener('load',start);
+
+/* ── Classification bars ── */
+const barEls = Array.from(document.querySelectorAll('.class-bars span'));
+const BAR_COUNT = barEls.length; // 8
+let prevDippers = []; // track which bars are currently dipped
+
+function dipBars(){
+  // Restore previous dippers back to full height + cyan color
+  prevDippers.forEach(i=>{
+    barEls[i].style.height = '100%';
+    barEls[i].style.background = 'var(--cyan-d)';
+  });
+
+  // Pick 1–3 random bars
+  const indices = [...Array(BAR_COUNT).keys()];
+  for(let i=indices.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [indices[i],indices[j]]=[indices[j],indices[i]];
+  }
+  const dipCount = randInt(1, 4); // 1, 2, or 3
+  const dippers  = indices.slice(0, dipCount);
+  prevDippers    = dippers;
+
+  // Dip to random height 0–75%, turn deep red
+  dippers.forEach(i=>{
+    barEls[i].style.height     = `${rand(5, 75)}%`;
+    barEls[i].style.background = '#7a1a0a';   // deep red — matches window glow in image
+  });
+
+  // Next cycle in 3–5s — dipped bars stay as-is until then
+  setTimeout(dipBars, rand(3000, 5000));
+}
+
+setTimeout(dipBars, rand(3000, 5000));
 
 })();
 </script>
