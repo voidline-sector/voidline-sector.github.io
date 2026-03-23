@@ -15,6 +15,8 @@
   --cyan-b:  #8fffef;
   --text:    #4ee8d4;
   --dim:     #2a7a70;
+  --red:     #c0392b;
+  --red-b:   #e84e3a;
   --mono:    'Share Tech Mono', monospace;
   --display: 'Bebas Neue', sans-serif;
   --italic:  'Crimson Pro', serif;
@@ -51,10 +53,10 @@ html, body { width:100%; height:100%; background:#000; overflow:hidden; cursor:c
   position:absolute; width:44px; height:44px;
   opacity:0; animation:fadeIn 0.5s ease forwards 0.3s;
 }
-.corner.tl { top:18px;    left:18px;    border-top:2px solid var(--cyan-d); border-left:2px solid var(--cyan-d); }
-.corner.tr { top:18px;    right:18px;   border-top:2px solid var(--cyan-d); border-right:2px solid var(--cyan-d); }
-.corner.bl { bottom:18px; left:18px;    border-bottom:2px solid var(--cyan-d); border-left:2px solid var(--cyan-d); }
-.corner.br { bottom:18px; right:18px;   border-bottom:2px solid var(--cyan-d); border-right:2px solid var(--cyan-d); }
+.corner.tl { top:18px;    left:18px;    border-top:2px solid var(--cyan); border-left:2px solid var(--cyan); box-shadow: -2px -2px 8px rgba(78,232,212,0.3); }
+.corner.tr { top:18px;    right:18px;   border-top:2px solid var(--cyan); border-right:2px solid var(--cyan); box-shadow: 2px -2px 8px rgba(78,232,212,0.3); }
+.corner.bl { bottom:18px; left:18px;    border-bottom:2px solid var(--cyan); border-left:2px solid var(--cyan); box-shadow: -2px 2px 8px rgba(78,232,212,0.3); }
+.corner.br { bottom:18px; right:18px;   border-bottom:2px solid var(--cyan); border-right:2px solid var(--cyan); box-shadow: 2px 2px 8px rgba(78,232,212,0.3); }
 
 /* ── Top bar ── */
 #top {
@@ -62,17 +64,17 @@ html, body { width:100%; height:100%; background:#000; overflow:hidden; cursor:c
   padding:28px 36px 20px;
   display:flex; justify-content:space-between; align-items:center;
   font-size:14px; letter-spacing:0.24em; text-transform:uppercase;
-  color:var(--dim);
+  color:var(--cyan);
   border-bottom:1px solid rgba(78,232,212,0.15);
   opacity:0; animation:fadeUp 0.8s ease forwards 0.5s;
 }
 #top .r { display:flex; gap:22px; align-items:center; }
 .live {
-  color:var(--cyan); font-size:15px; letter-spacing:0.2em;
+  color:var(--red-b); font-size:15px; letter-spacing:0.2em;
   animation:blink 2.4s ease-in-out infinite;
-  text-shadow: 0 0 12px rgba(78,232,212,0.6);
+  text-shadow: 0 0 12px rgba(232,78,58,0.7);
 }
-#clock { letter-spacing:0.15em; color:var(--dim); }
+#clock { letter-spacing:0.15em; color:var(--cyan); }
 
 /* ── Title block ── */
 #title {
@@ -85,8 +87,8 @@ html, body { width:100%; height:100%; background:#000; overflow:hidden; cursor:c
 #title .t-eyebrow {
   font-family:var(--mono);
   font-size:13px; letter-spacing:0.55em;
-  color:var(--cyan-d); margin-bottom:6px; opacity:0.85;
-  text-shadow: 0 0 8px rgba(78,232,212,0.3);
+  color:var(--cyan); margin-bottom:6px;
+  text-shadow: 0 0 8px rgba(78,232,212,0.5);
 }
 
 /* Dilapidated title — SVG turbulence filter erodes the letterforms */
@@ -105,17 +107,17 @@ html, body { width:100%; height:100%; background:#000; overflow:hidden; cursor:c
 
 #title .t-divider {
   width:120px; height:1px;
-  background:linear-gradient(to right, transparent, var(--cyan-d), transparent);
+  background:linear-gradient(to right, transparent, var(--cyan), transparent);
   margin:16px auto; opacity:0.55;
 }
 #title .t-desc {
   font-family:var(--italic); font-style:italic; font-weight:300;
   font-size:15px; line-height:1.7;
-  color:var(--dim); max-width:360px; opacity:0.9;
+  color:var(--cyan); max-width:360px;
 }
 #title .t-desc em {
-  color:var(--cyan); font-style:italic;
-  text-shadow: 0 0 8px rgba(78,232,212,0.4);
+  color:var(--red-b); font-style:italic;
+  text-shadow: 0 0 10px rgba(232,78,58,0.6);
 }
 
 /* ── Bottom bar ── */
@@ -131,14 +133,13 @@ html, body { width:100%; height:100%; background:#000; overflow:hidden; cursor:c
 .dc.r { align-items:flex-end; }
 .dl {
   font-size:11px; letter-spacing:0.3em;
-  text-transform:uppercase; color:var(--dim); opacity:0.65;
+  text-transform:uppercase; color:var(--cyan); opacity:0.75;
 }
 .dv {
   font-size:18px; letter-spacing:0.08em;
   color:var(--cyan);
   text-shadow: 0 0 10px rgba(78,232,212,0.35);
 }
-.dv.glitch { animation:gfl 7s steps(1) infinite; }
 @keyframes gfl {
   0%,93%  { opacity:1; clip-path:none; color:var(--cyan); }
   94%     { opacity:0.4; clip-path:inset(25% 0 45% 0); color:var(--cyan-b); }
@@ -146,11 +147,22 @@ html, body { width:100%; height:100%; background:#000; overflow:hidden; cursor:c
   96%     { opacity:0.5; clip-path:inset(55% 0 15% 0); transform:translateX(2px); }
   97%,100%{ opacity:1; clip-path:none; transform:none; color:var(--cyan); }
 }
+/* Glitch is standalone — not coupled to .dv. Offsets randomized per load via JS. */
+.glitch { animation:gfl 7s steps(1) infinite; }
+.dv.red {
+  color:var(--red-b);
+  text-shadow: 0 0 10px rgba(232,78,58,0.5);
+}
 .status {
   font-size:11px; letter-spacing:0.25em; text-transform:uppercase;
-  color:var(--cyan-d); border:1px solid var(--cyan-d);
+  color:var(--cyan); border:1px solid var(--cyan);
   padding:3px 10px; margin-top:2px;
   animation:pulse 3s ease-in-out infinite;
+}
+.status.red {
+  color:var(--red-b); border-color:var(--red-b);
+  text-shadow: 0 0 8px rgba(232,78,58,0.5);
+  box-shadow: 0 0 6px rgba(232,78,58,0.2);
 }
 
 /* Classification bars */
@@ -165,10 +177,11 @@ html, body { width:100%; height:100%; background:#000; overflow:hidden; cursor:c
 .class-bars span {
   flex:1;
   height:100%;      /* JS overrides height on dip bars */
-  background:var(--cyan-d);
+  background:var(--cyan);
   border-radius:1px;
-  opacity:0.7;
+  opacity:0.8;
   transition: height 0.4s ease-in;   /* snap down quickly, no auto-restore smooth */
+  box-shadow: 0 0 4px rgba(78,232,212,0.3);
 }
 
 @media(max-width:705px){
@@ -245,7 +258,7 @@ html, body { width:100%; height:100%; background:#000; overflow:hidden; cursor:c
 
     <div id="title">
       <div class="t-eyebrow">TRANSMISSION ACTIVE</div>
-      <div class="t-name">VOIDLINE SECTOR R-77</div>
+      <div class="t-name glitch">VOIDLINE SECTOR R-77</div>
       <div class="t-divider"></div>
       <p class="t-desc">
         Anomalous aperture detected above transit corridor.<br/>
@@ -256,16 +269,16 @@ html, body { width:100%; height:100%; background:#000; overflow:hidden; cursor:c
     <div id="bottom">
       <div class="dc">
         <div class="dl">Coordinates</div>
-        <div class="dv">51°28'N · 00°07'W</div>
+        <div class="dv glitch" id="coords">51°28'N · 00°07'W</div>
       </div>
       <div class="dc c">
         <div class="dl">Anomaly Radius</div>
         <div class="dv" id="radius">— m</div>
-        <div class="status">EXPANDING</div>
+        <div class="status red">EXPANDING</div>
       </div>
       <div class="dc c">
         <div class="dl">Atmospheric Pressure</div>
-        <div class="dv glitch">994.3 hPa</div>
+        <div class="dv glitch" id="pressure">994.3 hPa</div>
       </div>
       <div class="dc r">
         <div class="dl">Classification</div>
@@ -295,6 +308,11 @@ function tick(){
     String(n.getSeconds()).padStart(2,'0');
 }
 tick(); setInterval(tick,1000);
+
+/* Randomize glitch offsets so firing order varies every page load */
+['.t-name', '#coords', '#pressure'].forEach(sel => {
+  document.querySelector(sel).style.animationDelay = `-${(Math.random() * 7).toFixed(2)}s`;
+});
 
 /* Radius */
 const radEl=document.getElementById('radius');
@@ -502,10 +520,11 @@ const BAR_COUNT = barEls.length; // 8
 let prevDippers = []; // track which bars are currently dipped
 
 function dipBars(){
-  // Restore previous dippers back to full height + cyan color
+  // Restore previous dippers back to full height + bright cyan
   prevDippers.forEach(i=>{
     barEls[i].style.height = '100%';
-    barEls[i].style.background = 'var(--cyan-d)';
+    barEls[i].style.background = 'var(--cyan)';
+    barEls[i].style.boxShadow = '0 0 4px rgba(78,232,212,0.3)';
   });
 
   // Pick 1–3 random bars
@@ -518,10 +537,11 @@ function dipBars(){
   const dippers  = indices.slice(0, dipCount);
   prevDippers    = dippers;
 
-  // Dip to random height 0–75%, turn deep red
+  // Dip to random height 0–75%, turn bright red
   dippers.forEach(i=>{
     barEls[i].style.height     = `${rand(5, 75)}%`;
-    barEls[i].style.background = '#7a1a0a';   // deep red — matches window glow in image
+    barEls[i].style.background = 'var(--red-b)';
+    barEls[i].style.boxShadow  = '0 0 6px rgba(232,78,58,0.5)';
   });
 
   // Next cycle in 3–5s — dipped bars stay as-is until then
