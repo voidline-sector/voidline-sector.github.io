@@ -147,7 +147,7 @@ html, body { width:100%; height:100%; background:#000; overflow:hidden; cursor:c
   96%     { opacity:0.5; clip-path:inset(55% 0 15% 0); transform:translateX(2px); }
   97%,100%{ opacity:1; clip-path:none; transform:none; color:var(--cyan); }
 }
-/* Glitch is standalone — not coupled to .dv. Offsets randomized per load via JS. */
+/* .glitch is standalone — not coupled to .dv. Offsets randomized per load via JS. */
 .glitch { animation:gfl 7s steps(1) infinite; }
 .dv.red {
   color:var(--red-b);
@@ -241,7 +241,7 @@ html, body { width:100%; height:100%; background:#000; overflow:hidden; cursor:c
 <body>
 
 <div id="scene">
-  <img id="bg" src="Voidline_Sector_R-77-viewport01.png" alt="Voidline Sector R-77"/>
+  <img id="bg" src="" alt="Voidline Sector R-77"/>
   <canvas id="fx"></canvas>
 
   <div id="ui">
@@ -309,9 +309,30 @@ function tick(){
 }
 tick(); setInterval(tick,1000);
 
+/* ── Image pool ──
+   desktop: all three viewports, random each load
+   mobile (≤705px): portrait viewports only
+   showTitle: false = billboard image already has the name, hide .t-name
+*/
+const IMAGES = [
+  { src: 'Voidline_Sector_R-77_viewport_01.jpg', showTitle: true,  portrait: false },
+  { src: 'Voidline_Sector_R-77_viewport_02_portrait.jpg', showTitle: false, portrait: true  },
+  { src: 'Voidline_Sector_R-77_viewport_03_portrait.jpg', showTitle: false, portrait: true  },
+];
+const img      = document.getElementById('bg');
+const isMobile = window.matchMedia('(max-width:705px)').matches;
+const pool     = isMobile ? IMAGES.filter(i => i.portrait) : IMAGES;
+const chosen   = pool[Math.floor(Math.random() * pool.length)];
+
+img.src = chosen.src;
+if (!chosen.showTitle) {
+  document.querySelector('#title .t-name').style.display = 'none';
+}
+
 /* Randomize glitch offsets so firing order varies every page load */
 ['.t-name', '#coords', '#pressure'].forEach(sel => {
-  document.querySelector(sel).style.animationDelay = `-${(Math.random() * 7).toFixed(2)}s`;
+  const el = document.querySelector(sel);
+  if (el) el.style.animationDelay = `-${(Math.random() * 7).toFixed(2)}s`;
 });
 
 /* Radius */
@@ -328,7 +349,6 @@ setInterval(tickR,900);
 /* Canvas */
 const canvas=document.getElementById('fx');
 const ctx=canvas.getContext('2d');
-const img=document.getElementById('bg');
 
 function imgRect(){
   const vw=window.innerWidth, vh=window.innerHeight;
@@ -340,13 +360,14 @@ function imgRect(){
 function resize(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
 window.addEventListener('resize',resize); resize();
 
-/* Rain */
+/* Rain — spans full canvas, same amber drops everywhere.
+   Drops are seeded across the whole viewport so bars get identical coverage. */
 const drops=[];
 function mkDrop(ry){
-  const r=imgRect();
+  const vw=canvas.width, vh=canvas.height;
   return {
-    x:   r.x+rand(0,r.w),
-    y:   ry ? rand(r.y,r.y+r.h) : r.y+rand(-110,-5),
+    x:   rand(0, vw),
+    y:   ry ? rand(0, vh) : rand(-110, -5),
     len: rand(18,65),
     spd: rand(7,22),
     op:  rand(0.12,0.42),
@@ -357,7 +378,7 @@ function mkDrop(ry){
 for(let i=0;i<220;i++) drops.push(mkDrop(true));
 
 function drawRain(){
-  const r=imgRect();
+  const vw=canvas.width, vh=canvas.height;
   for(const d of drops){
     const dx=Math.sin(d.ang)*d.len;
     const dy=Math.cos(d.ang)*d.len;
@@ -372,7 +393,7 @@ function drawRain(){
     ctx.strokeStyle=g; ctx.lineWidth=d.w; ctx.stroke();
     d.x+=Math.sin(d.ang)*d.spd*0.3;
     d.y+=Math.cos(d.ang)*d.spd;
-    if(d.y-d.len>r.y+r.h||d.x>r.x+r.w+50||d.x<r.x-50)
+    if(d.y-d.len>vh || d.x>vw+50 || d.x<-50)
       Object.assign(d,mkDrop(false));
   }
 }
