@@ -499,8 +499,24 @@ const BOOT_DUR=2.6, BOOT_OFF=24;
 gType='rgb'; rgbCurOff=BOOT_OFF; gElapsed=0; gTotalDur=BOOT_DUR;
 
 let last=0;
+let animId=null;
+let timeScale=1.0, targetScale=1.0;
+
 function loop(ts){
-  const dt=Math.min((ts-last)/1000,0.05); last=ts;
+  animId=requestAnimationFrame(loop);
+  const rawDt=Math.min((ts-last)/1000,0.05); last=ts;
+
+  // Slow lerp — stays in perceptible range longer (~5s fade at 60fps)
+  timeScale+=(targetScale-timeScale)*0.015;
+  const dt=rawDt*timeScale;
+
+  // Frame-skip — as timeScale falls, randomly bail before redrawing.
+  // Combines with the slow lerp: long silky deceleration into stutter-freeze.
+  if(targetScale===0 && Math.random()>timeScale){
+    if(timeScale<0.005){ cancelAnimationFrame(animId); animId=null; }
+    return;
+  }
+
   ctx.clearRect(0,0,canvas.width,canvas.height);
   drawRain();
 
@@ -519,7 +535,6 @@ function loop(ts){
     } else {
       gElapsed+=dt; gDur-=dt;
       if(gType==='rgb'){
-        // identical formula to boot: t = elapsed / totalDur
         const t=Math.min(gElapsed/gTotalDur,1);
         rgbCurOff=rgbStartOff*(1-t*t);
       }
@@ -528,12 +543,26 @@ function loop(ts){
       if(gDur<=0){ gType='none'; gTimer=rand(6,12); }
     }
   }
-  requestAnimationFrame(loop);
+
 }
 
-function start(){ requestAnimationFrame(loop); }
+function slowDown(){ targetScale=0; }
+function speedUp(){
+  targetScale=1;
+  if(!animId){ last=performance.now(); animId=requestAnimationFrame(loop); }
+}
+
+function start(){ if(!animId){ last=performance.now(); animId=requestAnimationFrame(loop); } }
 if(img.complete&&img.naturalWidth) start();
 else img.addEventListener('load',start);
+
+// Tab switch (same browser window)
+document.addEventListener('visibilitychange',()=>{
+  document.hidden ? slowDown() : speedUp();
+});
+// App focus (switching to/from another application, address bar, devtools, etc.)
+window.addEventListener('blur',  slowDown);
+window.addEventListener('focus', speedUp);
 
 /* ── Classification bars ── */
 const barEls = Array.from(document.querySelectorAll('.class-bars span'));
