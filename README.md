@@ -9,7 +9,12 @@ index.html                                        — entire page (self-containe
 Voidline_Sector_R-77_viewport_01.jpg              — desktop landscape image
 Voidline_Sector_R-77_viewport_02_portrait.jpg     — portrait image (mobile + desktop pool)
 Voidline_Sector_R-77_viewport_03_portrait.jpg     — portrait image (mobile + desktop pool)
+fonts/                                            — the three webfonts and their licences
 ```
+
+The fonts are served from this site rather than from a font service, so opening
+the page contacts nothing else. Share Tech Mono, Bebas Neue and Crimson Pro are
+each under the SIL Open Font License 1.1, with the licence beside the font.
 
 ## Running locally
 
