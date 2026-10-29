@@ -1,0 +1,104 @@
+/* The downloads page. A file of its own (not an inline <style>) because the
+   page's Content-Security-Policy allows styles from this site only. Fonts and
+   palette are the front page's own (index.html), served from ../fonts/. */
+
+@font-face {
+  font-family:'Share Tech Mono'; font-style:normal; font-weight:400; font-display:swap;
+  src:url(../fonts/share-tech-mono-latin-400-normal.woff2) format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face {
+  font-family:'Bebas Neue'; font-style:normal; font-weight:400; font-display:swap;
+  src:url(../fonts/bebas-neue-latin-400-normal.woff2) format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face {
+  font-family:'Crimson Pro'; font-style:italic; font-weight:300; font-display:swap;
+  src:url(../fonts/crimson-pro-latin-300-italic.woff2) format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+:root {
+  --cyan:    #4ee8d4;
+  --cyan-b:  #8fffef;
+  --mono:    'Share Tech Mono', monospace;
+  --display: 'Bebas Neue', sans-serif;
+  --italic:  'Crimson Pro', serif;
+}
+
+* { box-sizing:border-box; margin:0; padding:0; }
+html, body { min-height:100%; background:#000; color:var(--cyan); font-family:var(--mono); }
+
+#frame {
+  position:relative;
+  min-height:100vh;
+  padding:0 16px 72px;
+  display:flex; flex-direction:column; align-items:center;
+}
+
+.corner { position:absolute; width:44px; height:44px; pointer-events:none; }
+.corner.tl { top:18px;    left:18px;  border-top:2px solid var(--cyan);    border-left:2px solid var(--cyan); }
+.corner.tr { top:18px;    right:18px; border-top:2px solid var(--cyan);    border-right:2px solid var(--cyan); }
+.corner.bl { bottom:18px; left:18px;  border-bottom:2px solid var(--cyan); border-left:2px solid var(--cyan); }
+.corner.br { bottom:18px; right:18px; border-bottom:2px solid var(--cyan); border-right:2px solid var(--cyan); }
+
+#top {
+  align-self:stretch;
+  padding:28px 20px 20px;
+  font-size:14px; letter-spacing:0.24em;
+  border-bottom:1px solid rgba(78,232,212,0.15);
+}
+
+#title {
+  margin-top:clamp(40px, 12vh, 120px);
+  display:flex; flex-direction:column; align-items:center; text-align:center;
+}
+#title .t-name {
+  font-family:var(--display); font-weight:400;
+  font-size:clamp(48px, 9vw, 96px);
+  line-height:0.92; letter-spacing:0.06em;
+  text-shadow:
+    0 0 12px rgba(78,232,212,0.9),
+    0 0 35px rgba(78,232,212,0.55),
+    0 0 80px rgba(78,232,212,0.25);
+}
+#title .t-divider {
+  width:120px; height:1px; margin:16px auto; opacity:0.55;
+  background:linear-gradient(to right, transparent, var(--cyan), transparent);
+}
+#title .t-desc {
+  font-family:var(--italic); font-style:italic; font-weight:300;
+  font-size:16px; line-height:1.7;
+}
+
+#platforms {
+  margin-top:48px;
+  width:100%; max-width:620px;
+  border-top:1px solid rgba(78,232,212,0.15);
+}
+.row {
+  display:grid; grid-template-columns:150px 1fr; gap:16px;
+  padding:22px 0;
+  border-bottom:1px solid rgba(78,232,212,0.15);
+}
+.label { font-size:12px; letter-spacing:0.3em; opacity:0.8; padding-top:4px; }
+.body { display:flex; flex-direction:column; align-items:flex-start; gap:10px; }
+
+a { color:var(--cyan); }
+.get {
+  font-size:16px; letter-spacing:0.12em; text-decoration:none;
+  border:1px solid var(--cyan); padding:8px 14px;
+  text-shadow:0 0 10px rgba(78,232,212,0.4);
+}
+.get:hover, .get:focus-visible {
+  color:var(--cyan-b); border-color:var(--cyan-b);
+  box-shadow:0 0 12px rgba(78,232,212,0.35); outline:none;
+}
+.quiet { font-size:13px; letter-spacing:0.1em; opacity:0.8; }
+.quiet:hover, .quiet:focus-visible { opacity:1; color:var(--cyan-b); outline:none; }
+.note { font-size:13px; line-height:1.6; opacity:0.8; max-width:42ch; }
+
+@media (max-width: 560px) {
+  .row { grid-template-columns:1fr; gap:10px; }
+  #top { font-size:12px; letter-spacing:0.18em; }
+}

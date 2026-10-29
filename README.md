@@ -10,6 +10,7 @@ Voidline_Sector_R-77_viewport_01.jpg              — desktop landscape image
 Voidline_Sector_R-77_viewport_02_portrait.jpg     — portrait image (mobile + desktop pool)
 Voidline_Sector_R-77_viewport_03_portrait.jpg     — portrait image (mobile + desktop pool)
 fonts/                                            — the three webfonts and their licences
+downloads/                                        — the desktop app's download page (unlinked and noindex until the Store launch)
 ```
 
 The fonts are served from this site rather than from a font service, so opening
